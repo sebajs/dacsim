@@ -1,0 +1,77 @@
+DAC-DB---------------------------------------
+
+    EQUIP_TYPE
+        type
+    
+    HEADEND
+        handle
+        
+    USPLANT
+        handle
+        
+    DSPLANT
+        handle
+        
+    CHANNELMAP
+        handle
+        
+    SERVICE
+        handle
+        
+    PROGRAM
+        service_handle
+        program_handle
+        program_name
+        alternate_program_name
+        epoch_start_time
+        epoch_end_time
+        epoch_duration
+        interstitial_period
+        preview_time
+        mpaa_advisory
+        violent_content_advisory
+        sexual_content_advisory
+        language_content_advisory
+        rating_region
+        impulse_purchesable
+        package_count
+        program_name_display_time
+        purchase_cost
+        purchase_price
+        anytime_free_prev_duration
+        feature_setting
+        
+    STB
+        serial_number
+        bsi_code
+
+STB-DB---------------------------------------
+
+    STB
+        bsi_code
+        serial_number
+        unit_address
+        equip_type
+        equip_sub_type
+        headend_handle
+        upstream_plant_handle
+        downstream_plant_handle
+        vcm_handle
+        on_plant
+        credit_allowed
+        purchases_allowed
+        max_pack_cost
+        timezone_id
+        epg_region
+        region_config_handle
+        turnon_vc
+        turnoff_vc
+        output_channel
+        feature_setting
+        
+    STB_SERVICES
+        service_handle
+        
+    STB_PROGRAMS
+        program_handle
+    
