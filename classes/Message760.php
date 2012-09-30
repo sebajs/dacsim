@@ -139,11 +139,9 @@ class Message760 extends Payload
     
     private function add($iSequence)
     {
-        // TODO Esto se rompió!
-        // Se debe instanciar el STB y lueg ejecutar el exists()
+        $oSTB = new SetTopBox(Message::hexstr($this->sSerialN));
         
-        if (!SetTopBox::exists($this->sSerialN)) {
-            $oSTB = new SetTopBox($this->sSerialN);
+        if (!$oSTB->exists(Message::hexstr($this->sSerialN))) {
             $oSTB->save();
             
             // 0    No error.
@@ -156,8 +154,9 @@ class Message760 extends Payload
     
     private function change($iSequence)
     {
-        if (SetTopBox::exists($this->sSerialN)) {
-            $oSTB = new SetTopBox($this->sSerialN);
+        $oSTB = new SetTopBox(Message::hexstr($this->sSerialN));
+
+        if ($oSTB->exists(Message::hexstr($this->sSerialN))) {
             $oSTB->save();
             
             // 0    No error.
@@ -170,8 +169,9 @@ class Message760 extends Payload
     
     private function delete($iSequence)
     {
-        if (SetTopBox::exists($this->sSerialN)) {
-            $oSTB = new SetTopBox($this->sSerialN);
+        $oSTB = new SetTopBox(Message::hexstr($this->sSerialN));
+
+        if ($oSTB->exists(Message::hexstr($this->sSerialN))) {
             $oSTB->delete();
             
             // 0    No error.
