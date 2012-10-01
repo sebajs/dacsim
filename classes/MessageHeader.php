@@ -14,8 +14,8 @@ class MessageHeader
     private $iType;
     private $iCheckSum;
     
-    private $bCheckSumValid;
-    private $bSizeValid;
+    private $bCheckSumValid = true;
+    private $bSizeValid     = true;
     
     public function __construct($sData='')
     {        
