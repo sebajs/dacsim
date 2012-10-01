@@ -8,12 +8,15 @@ define('USPLANT_PATH', 'usplant/');
 define('DSPLANT_PATH', 'dsplant/');
 define('CHANNELMAP_PATH', 'channelmap/');
 define('SERVICE_PATH', 'service/');
+define('BSI_PATH', 'bsi/');
 define('DATA_EXTENSION', '.dat');
 
 function dacsimAutoloader($sClassName)
 {
     //class directories
     $aClassPath = array('classes/');
+    $aClassPath = array('classes/topology');
+    $aClassPath = array('classes/messages');
 
     //for each directory
     foreach($aClassPath as $sDir) {
