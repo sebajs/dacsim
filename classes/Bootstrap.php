@@ -35,6 +35,19 @@ class Bootstrap
                     $sSerialNumber = $argv[$key + 1];
                     Topology::showSetTopBox($sSerialNumber);
                     break;
+                case '--show-all':
+                    $bStartSim = false;
+                    $aTypes    = Topology::getObjectTypes();
+                    try {
+                        foreach ($aTypes AS $sType) {
+                            if ($sType != 'stb') {
+                                Topology::show($sType);
+                            }
+                        }
+                    } catch (Exception $e) {
+                        echo 'Error: ',  $e->getMessage(), "\n";
+                    }
+                    break;
                 case '--show':
                     $bStartSim   = false;
                     $sObjectType = $argv[$key + 1];

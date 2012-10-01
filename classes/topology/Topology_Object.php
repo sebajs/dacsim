@@ -22,8 +22,12 @@ class Topology_Object extends Thing
         unlink($sFileName);
     }
     
-    public function exists($sName, $sObjectPath='')
+    public function exists($sName='', $sObjectPath='')
     {
+        if ($sName == '') {
+            $sName = $this->sName;
+        }
+        
         if ($sObjectPath == '') {
             $sFileName = DATA_PATH.$this->sStoragePath.$sName.DATA_EXTENSION;
         } else {

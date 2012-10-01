@@ -51,7 +51,7 @@ class Topology
     
     public static function getObjectTypes()
     {
-        $aTypes = array('stb', 'equiptype', 'headend', 'usplant', 'dsplant', 'channelmap', 'service');
+        $aTypes = array('bsi', 'stb', 'equiptype', 'headend', 'usplant', 'dsplant', 'channelmap', 'service');
         
         return ($aTypes);
     }

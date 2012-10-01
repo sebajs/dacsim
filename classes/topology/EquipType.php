@@ -7,4 +7,9 @@ class EquipType extends Topology_Object
         $this->sStoragePath = EQUIPTYPE_PATH;
         $this->sName        = $sName;
     }
+    
+    public function validateSubType($iSubType)
+    {
+        return (is_numeric($iSubType));
+    }
 }

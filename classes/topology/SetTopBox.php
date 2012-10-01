@@ -38,9 +38,7 @@ class SetTopBox extends Topology_Object
     }
     
     public function save()
-    {
-        echo print_r($this, 1);
-        
+    {        
         $iError = $this->validate();
         
         if ($iError == 0) {
@@ -93,6 +91,72 @@ class SetTopBox extends Topology_Object
     
     private function validate()
     {
-        return 0;
+        $iError = 0;
+        
+        // UnitAddress
+        if ($iError == 0) {
+            if (strlen($this->sUnitAddress) != 16 || !is_numeric($this->sUnitAddress)) {
+                // 1007 Invalid Unit Address.
+                $iError = 1007;
+            }
+        }
+        
+        // EquipType and EquipSubType
+        if ($iError == 0) {
+            $oTemp = new EquipType($this->iEqType);
+            if (!$oTemp->exists()) {
+                // 1009 Invalid Equipment type.
+                $iError = 1009;
+            }
+            
+            // EquipSubType
+            if (!$oTemp->validateSubType($this->iEqSubType)) {
+                // 1010 Invalid Equipment subtype.
+                $iError = 1010;
+            }
+            unset($oTemp);
+        }
+        
+        // HeadEnd
+        if ($iError == 0) {
+            $oTemp = new HeadEnd($this->iHeadEnd);
+            if (!$oTemp->exists()) {
+                // 1011 Headend handle does not exist.
+                $iError = 1011;
+            }
+            unset($oTemp);
+        }
+        
+        // USPlant
+        if ($iError == 0) {
+            $oTemp = new USPlant($this->iUsPlant);
+            if (!$oTemp->exists()) {
+                // 1012 Upstream Plant Handle does not exist.
+                $iError = 1012;
+            }
+            unset($oTemp);
+        }
+        
+        // DSPlant
+        if ($iError == 0) {
+            $oTemp = new DSPlant($this->iDsPlant);
+            if (!$oTemp->exists()) {
+                // 1013 Downstream Plant Handle does not exist.
+                $iError = 1013;
+            }
+            unset($oTemp);
+        }
+        
+        // ChannelMap
+        if ($iError == 0) {
+            $oTemp = new ChannelMap($this->iChannelMap);
+            if (!$oTemp->exists()) {
+                // 1014 VCM Handle does not exist.
+                $iError = 1014;
+            }
+            unset($oTemp);
+        }
+        
+        return $iError;
     }
 }

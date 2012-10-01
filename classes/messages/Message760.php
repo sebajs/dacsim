@@ -14,7 +14,7 @@ class Message760 extends Payload
     protected $aDataComponents;
     
     public function __construct($sData)
-    {        
+    {
         $this->aReqTypes = array('', 'Add', 'Change', 'Delete');
         
         $this->iBsiCode = substr($sData, MessageHeader::HEADER_LENGTH, 4);
@@ -62,20 +62,29 @@ class Message760 extends Payload
     
     public function run($iSequence)
     {
-        switch ($this->iReqType) {
-            case 1: //Add
-                $this->add($iSequence);
-                break;
-            case 2: //Change
-                $this->change($iSequence);
-                break;
-            case 3: //Delete
-                $this->delete($iSequence);
-                break;
-            default:
-                // 3011 Invalid Message Type.
-                $this->oResponse = new Response001($iSequence, 3011);
-                break;
+        $oBSI = new BSI(hexdec($this->iBsiCode));
+        
+        if ($oBSI->exists()) {
+        
+            switch ($this->iReqType) {
+                case 1: //Add
+                    $this->add($iSequence);
+                    break;
+                case 2: //Change
+                    $this->change($iSequence);
+                    break;
+                case 3: //Delete
+                    $this->delete($iSequence);
+                    break;
+                default:
+                    // 3011 Invalid Message Type.
+                    $this->oResponse = new Response001($iSequence, 3011);
+                    break;
+            }
+        
+        } else {
+            // 1002 Invalid BSI Code. BSI Code not assigned to this WireLink port.
+            $this->oResponse = new Response001($iSequence, 1002);            
         }
     }
     
