@@ -3,20 +3,20 @@
 class Error
 {
     private static $aErrors;
-    
+
     public static function getDescription($iErrNum)
     {
         if (!is_array(self::$aErrors)) {
             self::loadDescriptions();
         }
-        
+
         if (!isset(self::$aErrors[$iErrNum])) {
             $iErrNum = -1;
         }
-        
+
         return self::$aErrors[$iErrNum];
     }
-    
+
     public static function loadDescriptions()
     {
         self::$aErrors = array();
@@ -35,6 +35,9 @@ class Error
         self::$aErrors[1012] = 'Upstream Plant Handle does not exist';
         self::$aErrors[1013] = 'Downstream Plant Handle does not exist';
         self::$aErrors[1014] = 'VCM Handle does not exist';
+        self::$aErrors[1015] = 'Invalid Operation Code in the State Component';
+        self::$aErrors[1017] = 'Region Config Handle in the Feature Component does not exist';
+        self::$aErrors[1062] = 'Missing Type Component in 760 Command';
         self::$aErrors[2012] = 'Poll of Terminal Failed - Settop Not Responding';
         self::$aErrors[3011] = 'Invalid Message Type';
     }

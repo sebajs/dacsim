@@ -22,6 +22,7 @@ class Topology_Object_Factory
         self::$aObjectTypes['dsplant']    = 'DSPlant';
         self::$aObjectTypes['channelmap'] = 'ChannelMap';
         self::$aObjectTypes['service']    = 'Service';
+        self::$aObjectTypes['regionconf'] = 'RegionConfig';
     }
     
     public static function getObjectTypesClass($sObjectType)

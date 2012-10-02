@@ -1,7 +1,7 @@
 <?php
 
 class SetTopBox extends Topology_Object
-{   
+{
     protected $iBsiCode;
     protected $sSerialNumber;
     protected $sUnitAddress;
@@ -23,24 +23,24 @@ class SetTopBox extends Topology_Object
     protected $iOutputChannel;
     protected $iFeatureSetting;
     protected $sFeatureSetting;
-    
+
     public function __construct($sSerialNumber)
-    {                
+    {
         $this->sStoragePath  = STBS_PATH;
         $this->sName         = $sSerialNumber;
         $this->sSerialNumber = $sSerialNumber;
     }
-    
+
     public function show()
     {
         echo " SerialN:   ".$this->sSerialNumber." (".Message::hexstr($this->sSerialNumber).")\n";
-        echo "\n"; 
+        echo "\n";
     }
-    
+
     public function save()
-    {        
+    {
         $iError = $this->validate();
-        
+
         if ($iError == 0) {
             $sFileName = DATA_PATH.$this->sStoragePath.Message::strhex($this->sName).DATA_EXTENSION;
             file_put_contents($sFileName, serialize($this));
@@ -48,13 +48,13 @@ class SetTopBox extends Topology_Object
             throw new Exception("Validation Error {$iError}", $iError);
         }
     }
-    
+
     public function delete()
     {
         $sFileName = DATA_PATH.$this->sStoragePath.Message::strhex($this->sName).DATA_EXTENSION;
         unlink($sFileName);
     }
-    
+
     public function exists($sName, $sObjectPath='')
     {
         if ($sObjectPath == '') {
@@ -64,12 +64,12 @@ class SetTopBox extends Topology_Object
         }
         return file_exists($sFileName);
     }
-      
+
     public function listAll()
     {
         $sDir  = DATA_PATH.STBS_PATH;
         $aStbs = array();
-        
+
         if ($handle = opendir($sDir)) {
             while (false !== ($entry = readdir($handle))) {
                 $sSerialNumber = Message::hexstr(substr($entry, 0, -4));
@@ -80,19 +80,19 @@ class SetTopBox extends Topology_Object
 
             closedir($handle);
         }
-        
+
         asort($aStbs);
-        
+
         echo "Found ".count($aStbs)." ".get_class($this).":\n";
         foreach ($aStbs AS $sSTB) {
             echo " - {$sSTB}\n";
-        }    
+        }
     }
-    
+
     private function validate()
     {
         $iError = 0;
-        
+
         // UnitAddress
         if ($iError == 0) {
             if (strlen($this->sUnitAddress) != 16 || !is_numeric($this->sUnitAddress)) {
@@ -100,7 +100,7 @@ class SetTopBox extends Topology_Object
                 $iError = 1007;
             }
         }
-        
+
         // EquipType and EquipSubType
         if ($iError == 0) {
             $oTemp = new EquipType($this->iEqType);
@@ -108,7 +108,7 @@ class SetTopBox extends Topology_Object
                 // 1009 Invalid Equipment type.
                 $iError = 1009;
             }
-            
+
             // EquipSubType
             if (!$oTemp->validateSubType($this->iEqSubType)) {
                 // 1010 Invalid Equipment subtype.
@@ -116,7 +116,7 @@ class SetTopBox extends Topology_Object
             }
             unset($oTemp);
         }
-        
+
         // HeadEnd
         if ($iError == 0) {
             $oTemp = new HeadEnd($this->iHeadEnd);
@@ -126,7 +126,7 @@ class SetTopBox extends Topology_Object
             }
             unset($oTemp);
         }
-        
+
         // USPlant
         if ($iError == 0) {
             $oTemp = new USPlant($this->iUsPlant);
@@ -136,7 +136,7 @@ class SetTopBox extends Topology_Object
             }
             unset($oTemp);
         }
-        
+
         // DSPlant
         if ($iError == 0) {
             $oTemp = new DSPlant($this->iDsPlant);
@@ -146,7 +146,7 @@ class SetTopBox extends Topology_Object
             }
             unset($oTemp);
         }
-        
+
         // ChannelMap
         if ($iError == 0) {
             $oTemp = new ChannelMap($this->iChannelMap);
@@ -156,7 +156,17 @@ class SetTopBox extends Topology_Object
             }
             unset($oTemp);
         }
-        
+
+        // RegionConfig
+        if ($iError == 0) {
+            $oTemp = new RegionConfig($this->iRegionConfig);
+            if (!$oTemp->exists()) {
+                // 1017 Region Config Handle in the Feature Component does not exist.
+                $iError = 1017;
+            }
+            unset($oTemp);
+        }
+
         return $iError;
     }
 }

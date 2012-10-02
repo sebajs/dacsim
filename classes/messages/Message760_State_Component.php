@@ -34,4 +34,9 @@ class Message760_State_Component extends Thing
         echo "   OnPlant:   ".$this->iOnPlant.    " (".hexdec($this->iOnPlant).")\n";
         echo "   Op Code:   ".$this->iOpCode.     " (".hexdec($this->iOpCode).": ".$aOpCodes[hexdec($this->iOpCode)].")\n";
     }
+    
+    public function validateOperation()
+    {
+    	return ($this->iOpCode >= 1 && $this->iOpCode <= 8);
+    }
 }
