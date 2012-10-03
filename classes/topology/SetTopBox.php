@@ -42,25 +42,41 @@ class SetTopBox extends Topology_Object
         $iError = $this->validate();
 
         if ($iError == 0) {
-            $sFileName = DATA_PATH.$this->sStoragePath.Message::strhex($this->sName).DATA_EXTENSION;
+            $sFileName = DATA_PATH.$this->sStoragePath.($this->sName).DATA_EXTENSION;
             file_put_contents($sFileName, serialize($this));
         } else {
             throw new Exception("Validation Error {$iError}", $iError);
         }
     }
 
+    public function load()
+    {
+        if ($this->exists($this->sName)) {
+            $sFileName  = DATA_PATH.$this->sStoragePath.($this->sName).DATA_EXTENSION;
+            $oStoredStb = unserialize(file_get_contents($sFileName));
+            
+            if ($oStoredStb->iBsiCode == $this->iBsiCode) {
+                
+            } else {
+                // 1063 BSI Code and Settop Serial Number Mismatch Error.
+                $iError = 1063;
+                throw new Exception("Load Error {$iError}", $iError);
+            }
+        }
+    }
+
     public function delete()
     {
-        $sFileName = DATA_PATH.$this->sStoragePath.Message::strhex($this->sName).DATA_EXTENSION;
+        $sFileName = DATA_PATH.$this->sStoragePath.($this->sName).DATA_EXTENSION;
         unlink($sFileName);
     }
 
     public function exists($sName, $sObjectPath='')
     {
         if ($sObjectPath == '') {
-            $sFileName = DATA_PATH.$this->sStoragePath.Message::strhex($this->sName).DATA_EXTENSION;
+            $sFileName = DATA_PATH.$this->sStoragePath.($this->sName).DATA_EXTENSION;
         } else {
-            $sFileName = DATA_PATH.$sObjectPath.Message::strhex($this->sName).DATA_EXTENSION;
+            $sFileName = DATA_PATH.$sObjectPath.($this->sName).DATA_EXTENSION;
         }
         return file_exists($sFileName);
     }
@@ -72,7 +88,7 @@ class SetTopBox extends Topology_Object
 
         if ($handle = opendir($sDir)) {
             while (false !== ($entry = readdir($handle))) {
-                $sSerialNumber = Message::hexstr(substr($entry, 0, -4));
+                $sSerialNumber = (substr($entry, 0, -4));
                 if ($sSerialNumber != '') {
                     $aStbs[] = $sSerialNumber;
                 }

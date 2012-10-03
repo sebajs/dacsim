@@ -11,8 +11,10 @@ class Message684 extends Payload
     protected $sSerialNumber;
     protected $iActionCode;
     
-    public function __construct($sData)
+    public function __construct($iSequence, $sData)
     {                
+        parent::__construct($iSequence);
+
         $this->aActionCodes = array('', 
                                     'Query Service Authorizations', 
                                     'Poll Purchases', 

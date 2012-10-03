@@ -37,7 +37,14 @@ class Error
         self::$aErrors[1014] = 'VCM Handle does not exist';
         self::$aErrors[1015] = 'Invalid Operation Code in the State Component';
         self::$aErrors[1017] = 'Region Config Handle in the Feature Component does not exist';
+        self::$aErrors[1054] = 'Duplicate Type Component Error';
+        self::$aErrors[1055] = 'Duplicate Plant Component Error';
+        self::$aErrors[1056] = 'Duplicate State Component Error';
+        self::$aErrors[1057] = 'Duplicate Feature Component Error';
+        self::$aErrors[1058] = 'Duplicate Authorization Component Error';
+        self::$aErrors[1061] = 'Duplicate Business System Owner (BSO) Error';
         self::$aErrors[1062] = 'Missing Type Component in 760 Command';
+        self::$aErrors[1063] = 'BSI Code and Settop Serial Number Mismatch Error';
         self::$aErrors[2012] = 'Poll of Terminal Failed - Settop Not Responding';
         self::$aErrors[3011] = 'Invalid Message Type';
     }

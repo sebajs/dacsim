@@ -9,8 +9,10 @@ class Message721 extends Payload
     protected $iLastRecord;
     protected $aPurchases;
     
-    public function __construct($sData)
+    public function __construct($iSequence, $sData)
     {                
+        parent::__construct($iSequence);
+
         $this->iBsiCode = substr($sData, 12, 4);    
         $this->iLastRecord = substr($sData, -4, 2);
         

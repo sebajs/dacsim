@@ -8,7 +8,7 @@ class Response001
     {                
         $this->oMessage = new Message();
         
-        $oPayload = new Message001();
+        $oPayload = new Message001($iSequence);
         $oPayload->setError($iError);
         $oPayload->setChecksumError($bCheckSumValid);
         $oPayload->setSizeError($bSizeValid);

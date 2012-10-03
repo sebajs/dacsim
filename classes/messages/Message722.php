@@ -5,8 +5,10 @@ class Message722 extends Payload
     protected $iBsiCode;
     protected $iAckNak;
     
-    public function __construct($sData)
+    public function __construct($iSequence, $sData)
     {                
+        parent::__construct($iSequence);
+
         $this->iBsiCode = substr($sData, 12, 4);    
         $this->iAckNak  = substr($sData, 16, 2);    
     }

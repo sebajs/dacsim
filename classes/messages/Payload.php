@@ -1,10 +1,12 @@
 <?php
 
-class Payload extends Thing
+abstract class Payload extends Thing
 {
+    protected $iSequence;
     
-    public function __construct()
-    {                
+    public function __construct($iSequence)
+    {
+        $this->iSequence = $iSequence;
     }
     
     public function dump()

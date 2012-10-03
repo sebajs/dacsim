@@ -37,22 +37,22 @@ class Message
                 echo "-PAYLOAD--------------------------------------\n";
                 switch ($this->oHeader->getType()) {
                     case 001:
-                        $this->oPayload = new Message001($this->sData);
+                        $this->oPayload = new Message001($this->oHeader->getSequence(), $this->sData);
                         break;
                     case 684:
-                        $this->oPayload = new Message684($this->sData);
+                        $this->oPayload = new Message684($this->oHeader->getSequence(), $this->sData);
                         break;
                     case 720:
-                        $this->oPayload = new Message720($this->sData);
+                        $this->oPayload = new Message720($this->oHeader->getSequence(), $this->sData);
                         break;
                     case 721:
-                        $this->oPayload = new Message721($this->sData);
+                        $this->oPayload = new Message721($this->oHeader->getSequence(), $this->sData);
                         break;
                     case 722:
-                        $this->oPayload = new Message722($this->sData);
+                        $this->oPayload = new Message722($this->oHeader->getSequence(), $this->sData);
                         break;
                     case 760:
-                        $this->oPayload = new Message760($this->sData);
+                        $this->oPayload = new Message760($this->oHeader->getSequence(), $this->sData);
                         break;
                     default:
                         echo " UNKNOWN MESSAGE ".$this->oHeader->getType()." (".hexdec($this->oHeader->getType()).")\n";
@@ -89,7 +89,7 @@ class Message
     {
         if ($this->oHeader->isValid()) {
             if (method_exists($this->oPayload, 'run')) {
-                $this->oPayload->run($this->oHeader->getSequence());
+                $this->oPayload->run();
             }
         }
     }

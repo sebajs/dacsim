@@ -7,17 +7,19 @@ class Message001 extends Payload
     protected $iWordsToFollow;
     protected $sDataWord;
     
-    public function __construct($sData='')
+    public function __construct($iSequence, $sData='')
     {                
+        parent::__construct($iSequence);
+        
         if ($sData != '') {
             $this->iEncodedStatusWord = substr($sData, 12, 4);
-            $this->sEncodedStatusWordBits = strrev(decbin(hexdec($this->iEncodedStatusWord)));
+            $sEncodedStatusWordBits = strrev(decbin(hexdec($this->iEncodedStatusWord)));
         
-            if (isset($this->sEncodedStatusWordBits[1]) && $this->sEncodedStatusWordBits[1] == '1') {
+            if (isset($sEncodedStatusWordBits[1]) && $sEncodedStatusWordBits[1] == '1') {
                 $this->iErrorCodeWord = substr($sData, 16, 4);
             }
             
-            if (isset($this->sEncodedStatusWordBits[8]) && $this->sEncodedStatusWordBits[8] == '1') {
+            if (isset($sEncodedStatusWordBits[8]) && $sEncodedStatusWordBits[8] == '1') {
                 $this->iWordsToFollow = substr($sData, 20, 4);
             }
         }
