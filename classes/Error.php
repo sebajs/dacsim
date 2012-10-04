@@ -26,6 +26,7 @@ class Error
         self::$aErrors[231]  = 'Packet size error';
         self::$aErrors[232]  = 'Packet timeout error';
         self::$aErrors[1002] = 'Invalid BSI Code. BSI Code not assigned to this WireLink port';
+        self::$aErrors[1003] = 'BSI Code in the Business System Owner Component does not exist';
         self::$aErrors[1005] = 'Serial Number does not exist';
         self::$aErrors[1006] = 'Serial Number already exists';
         self::$aErrors[1007] = 'Invalid Unit Address';

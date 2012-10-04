@@ -154,7 +154,7 @@ class Message760 extends Payload
                 case '07': // Busco authorization component
                     if (!isset($this->aDataComponents['auth'])) {
                         $sHeader    = substr($sComponentsData, 0, Message760_Auth_Component::HEADER_LENGTH);
-                        $iNumRecs   = hexdec(substr($sComponent, -4));
+                        $iNumRecs   = hexdec(substr($sHeader, -4));
                         $iRecsLen   = $iNumRecs * Message760_Auth_Component::RECORD_LENGTH;
                         $sComponent = substr($sComponentsData, 0, Message760_Auth_Component::HEADER_LENGTH+$iRecsLen);
                         
@@ -202,12 +202,14 @@ class Message760 extends Payload
                 $oSTB->iEqType      = hexdec($this->aDataComponents['type']->iEqType);
                 $oSTB->iEqSubType   = hexdec($this->aDataComponents['type']->iEqSubType);
             }
+            
             if (isset($this->aDataComponents['plant'])) {
                 $oSTB->iHeadEnd    = hexdec($this->aDataComponents['plant']->iHeadEnd);
                 $oSTB->iUsPlant    = hexdec($this->aDataComponents['plant']->iUsPlant);
                 $oSTB->iDsPlant    = hexdec($this->aDataComponents['plant']->iDsPlant);
                 $oSTB->iChannelMap = hexdec($this->aDataComponents['plant']->iVcmHandle);
             }
+            
             if (isset($this->aDataComponents['state'])) {
                 $oSTB->iOnPlant = hexdec($this->aDataComponents['state']->iOnPlant);
 
@@ -218,6 +220,7 @@ class Message760 extends Payload
 		            $this->oResponse = new Response001($this->iSequence, 1015);
                 }
             }
+            
             if (isset($this->aDataComponents['feature'])) {
                 $oSTB->iCreditAllowed    = hexdec($this->aDataComponents['feature']->iCreditAllowed);
                 $oSTB->iPurchasesAllowed = hexdec($this->aDataComponents['feature']->iPurchAllowed);
@@ -299,6 +302,20 @@ class Message760 extends Payload
                 $oSTB->iOutputChannel    = hexdec($this->aDataComponents['feature']->iOutputChannel);
                 $oSTB->iFeatureSetting   = hexdec($this->aDataComponents['feature']->iFeatSetting);
                 $oSTB->sFeatureSetting   = $this->aDataComponents['feature']->sFeatSetting;
+            }
+            
+            if (isset($this->aDataComponents['bsowner']) && !$bFoundError) {
+                $oNewBSI = new BSI(hexdec($this->aDataComponents['bsowner']->iNewBsiCode));
+
+                if ($oNewBSI->exists()) {
+                    // Updates STB owner
+                    $oSTB->iBsiCode = $oNewBSI->sName;
+                } else {
+                	$bFoundError = true;
+
+        		    // 1003 BSI Code in the Business System Owner Component does not exist.
+		            $this->oResponse = new Response001($this->iSequence, 1003);
+                }
             }
 
             if (!$bFoundError) {

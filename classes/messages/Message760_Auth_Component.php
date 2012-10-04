@@ -33,7 +33,7 @@ class Message760_Auth_Component extends Thing
     }
     
     public function show()
-    {
+    {        
         echo " Authorization Component (".$this->iSubtype."):\n";
         echo "   Clear Pkg: ".$this->iClearAllPackages." (".hexdec($this->iClearAllPackages).")\n";
         echo "   Clear Srv: ".$this->iClearAllServices." (".hexdec($this->iClearAllServices).")\n";

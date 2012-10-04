@@ -13,6 +13,9 @@ class Message
         $this->sData  = $sData;
         
         if ($this->sData != '') {
+            
+            $this->sData = str_replace(' ', '', $this->sData);
+            $this->sData = str_replace('.', '', $this->sData);
         
             // Si comienza con STX se lo elimino.
             if (ord($this->sData[0]) == 2) {
