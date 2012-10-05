@@ -49,10 +49,13 @@ class SimulatorRunner
                     echo "Connection remotely closed!\n\n";
                     break;
                 }
-                if ($buf == 'shutdown') {
+                if ($buf == 'shutdown' || $buf == 'sd') {
                     socket_close($msgsock);
                     break 2;
                 }
+                
+                echo ord($buf[0])."\n";
+                echo ord($buf[1])."\n";
 
                 echo "\n";
                 echo "=Received message #{$iMessages}: $buf\n";
