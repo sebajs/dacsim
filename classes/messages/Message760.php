@@ -168,6 +168,19 @@ class Message760 extends Payload
                     }                
                     break;
                     
+                case '08': // Busco CableCard component
+                    if (!isset($this->aDataComponents['cablecard'])) {
+                        $sComponent = substr($sComponentsData, 0, Message760_CableCard_Component::LENGTH);
+                        $this->aDataComponents['cablecard'] = new Message760_CableCard_Component($sComponent);
+                        $sComponentsData = substr($sComponentsData, Message760_CableCard_Component::LENGTH);
+                        continue;
+                    } else {
+                        // 1065 Duplicate CableCARD/Host Component Error.
+                        $iError     = 1065; 
+                        $bExtractOk = false;
+                    }                
+                    break;
+                    
                 default:
                     // 1059 Unknown Component Error.
                     $iError     = 1059; 

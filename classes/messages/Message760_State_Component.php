@@ -27,7 +27,11 @@ class Message760_State_Component extends Thing
                           'De-Activate', 
                           'Activate', 
                           'Clear PIN', 
-                          'Factory Reset');            
+                          'Factory Reset', 
+                          'Mate', 
+                          'Remate', 
+                          'Validate', 
+                          'Re-Validate');            
         
         echo " State Component (".$this->iSubtype."):\n";
         echo "   BitMask:   ".$this->sBitMask.    " (".$this->sBitMask.")\n";

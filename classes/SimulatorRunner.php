@@ -53,9 +53,6 @@ class SimulatorRunner
                     socket_close($msgsock);
                     break 2;
                 }
-                
-                echo ord($buf[0])."\n";
-                echo ord($buf[1])."\n";
 
                 echo "\n";
                 echo "=Received message #{$iMessages}: $buf\n";

@@ -23,7 +23,12 @@ class Bootstrap
                     break;
                 case '--no-response';
                     $bSendResponse = false;
-                    break;    
+                    break;
+                case '--checksum':
+                    $bStartSim = false;
+                    $sStream   = $argv[$key + 1];
+                    ParserRunner::checksum($sStream);
+                    break;
                 case '-s';
                 case '--stream';
                     $bStartSim = false;
