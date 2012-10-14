@@ -23,6 +23,8 @@ class SetTopBox extends Topology_Object
     protected $iOutputChannel;
     protected $iFeatureSetting;
     protected $sFeatureSetting;
+    protected $aAuthRecords;
+    protected $iInstallTimestamp;
 
     public function __construct($sSerialNumber)
     {
@@ -33,8 +35,27 @@ class SetTopBox extends Topology_Object
 
     public function show()
     {
-        echo " SerialN:   ".$this->sSerialNumber." (".Message::hexstr($this->sSerialNumber).")\n";
-        echo "\n";
+        Output::line("STB Description");
+        Output::line();
+        Output::line(" SerialN:   ".$this->sSerialNumber);
+        Output::line(" BSICode:   ".hexdec($this->iBsiCode));
+        Output::line(" Instaled:  ".date('d.m.Y H:i:s', $this->iInstallTimestamp));
+        Output::line(" UnitAdd:   {$this->sUnitAddress} | EqType: {$this->iEqType} | EqSubType: {$this->iEqSubType}");
+        Output::line(" HeadEnd:   {$this->iHeadEnd} | US Plant: {$this->iUsPlant} | DS Plant: {$this->iDsPlant} | VCMhandle: {$this->iChannelMap}");
+        Output::line(" OnPlant:   ".$this->iOnPlant);
+        Output::line(" Credit:    {$this->iCreditAllowed} | Purchases: {$this->iPurchasesAllowed} | MaxCost: {$this->iMaxPackCost}");
+        Output::line(" TimeZone:  {$this->iTimeZoneId} | EPGRegion: {$this->iEpgRegion} | RegionCfg: {$this->iRegionConfig}");
+        Output::line(" TurnOnVC:  {$this->iTurnOnVC} | TurnOffVC: {$this->iTurnOffVC} | Output CH: {$this->iOutputChannel}");
+        Output::line(" FeatSets:  {$this->iFeatureSetting} ({$this->sFeatureSetting})");
+        
+        $oHelper = new Message760_Feature_Component('');
+        $aReversedSettings = strrev($this->sFeatureSetting);
+        for ($i=0; $i<strlen($this->sFeatureSetting); $i++) {
+            if ($aReversedSettings[$i] == '1') {
+                Output::line("     + ".$oHelper->getSettingName($i));
+            }
+        }
+        Output::line();
     }
 
     public function save()
@@ -49,13 +70,37 @@ class SetTopBox extends Topology_Object
         }
     }
 
-    public function load()
+    public function load($bOverrideBsiCode=false)
     {
         if ($this->exists($this->sName)) {
             $sFileName  = DATA_PATH.$this->sStoragePath.($this->sName).DATA_EXTENSION;
             $oStoredStb = unserialize(file_get_contents($sFileName));
             
-            if ($oStoredStb->iBsiCode == $this->iBsiCode) {
+            if ($oStoredStb->iBsiCode == $this->iBsiCode || $bOverrideBsiCode) {
+                
+                $this->iBsiCode          = $oStoredStb->iBsiCode;
+                $this->sSerialNumber     = $oStoredStb->sSerialNumber;
+                $this->sUnitAddress      = $oStoredStb->sUnitAddress;
+                $this->iEqType           = $oStoredStb->iEqType;
+                $this->iEqSubType        = $oStoredStb->iEqSubType;
+                $this->iHeadEnd          = $oStoredStb->iHeadEnd;
+                $this->iUsPlant          = $oStoredStb->iUsPlant;
+                $this->iDsPlant          = $oStoredStb->iDsPlant;
+                $this->iChannelMap       = $oStoredStb->iChannelMap;
+                $this->iOnPlant          = $oStoredStb->iOnPlant;
+                $this->iCreditAllowed    = $oStoredStb->iCreditAllowed;
+                $this->iPurchasesAllowed = $oStoredStb->iPurchasesAllowed;
+                $this->iMaxPackCost      = $oStoredStb->iMaxPackCost;
+                $this->iTimeZoneId       = $oStoredStb->iTimeZoneId;
+                $this->iEpgRegion        = $oStoredStb->iEpgRegion;
+                $this->iRegionConfig     = $oStoredStb->iRegionConfig;
+                $this->iTurnOnVC         = $oStoredStb->iTurnOnVC;
+                $this->iTurnOffVC        = $oStoredStb->iTurnOffVC;
+                $this->iOutputChannel    = $oStoredStb->iOutputChannel;
+                $this->iFeatureSetting   = $oStoredStb->iFeatureSetting;
+                $this->sFeatureSetting   = $oStoredStb->sFeatureSetting;
+                $this->aAuthRecords      = $oStoredStb->aAuthRecords;
+                $this->iInstallTimestamp = $oStoredStb->iInstallTimestamp;
                 
             } else {
                 // 1063 BSI Code and Settop Serial Number Mismatch Error.
@@ -99,9 +144,9 @@ class SetTopBox extends Topology_Object
 
         asort($aStbs);
 
-        echo "Found ".count($aStbs)." ".get_class($this).":\n";
+        Output::line("Found ".count($aStbs)." ".get_class($this).":");
         foreach ($aStbs AS $sSTB) {
-            echo " - {$sSTB}\n";
+            Output::line(" - {$sSTB}");
         }
     }
 

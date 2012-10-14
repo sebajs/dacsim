@@ -4,10 +4,10 @@ class ParserRunner
 {
     public static function run($sStream)
     {
-        echo "DACSIM Message Parser\n\n";
+        Output::line("DACSIM Message Parser");
+        Output::line();
         
-        echo "\n";
-        echo "=Message: {$sStream}\n";
+        Output::line("=Message: {$sStream}");
         
         // Se pasa el contenido al procesador de mensajes
         $oMessage = new Message($sStream);
@@ -18,7 +18,8 @@ class ParserRunner
     public static function checksum($sStream)
     {
         $sFinalStream = $sStream;
-        echo "DACSIM Checksum Generator\n\n";
+        Output::line("DACSIM Checksum Generator");
+        Output::line();
         
         $sStream = str_replace(' ', '', $sStream);
         $sStream = str_replace('.', '', $sStream);
@@ -28,8 +29,8 @@ class ParserRunner
         
         $sChecksum = MessageHeader::generateChecksum($sStream);
             
-        echo "=Size:     ".substr($sStream, 0, 4)." ({$iSize})\n";
-        echo "=Checksum: {$sChecksum}\n";
-        echo "=Message:  {$sStream}{$sChecksum}\n";
+        Output::line("=Size:     ".substr($sStream, 0, 4)." ({$iSize})");
+        Output::line("=Checksum: {$sChecksum}");
+        Output::line("=Message:  {$sStream}{$sChecksum}");
     }    
 }

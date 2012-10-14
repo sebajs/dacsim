@@ -38,6 +38,7 @@ class Error
         self::$aErrors[1014] = 'VCM Handle does not exist';
         self::$aErrors[1015] = 'Invalid Operation Code in the State Component';
         self::$aErrors[1017] = 'Region Config Handle in the Feature Component does not exist';
+        self::$aErrors[1020] = 'Service Handle does not exist for this Business System';
         self::$aErrors[1054] = 'Duplicate Type Component Error';
         self::$aErrors[1055] = 'Duplicate Plant Component Error';
         self::$aErrors[1056] = 'Duplicate State Component Error';

@@ -152,6 +152,7 @@ class Message760 extends Payload
                     break;
                     
                 case '07': // Busco authorization component
+                    echo "sCompType: ".$sCompType."\n";
                     if (!isset($this->aDataComponents['auth'])) {
                         $sHeader    = substr($sComponentsData, 0, Message760_Auth_Component::HEADER_LENGTH);
                         $iNumRecs   = hexdec(substr($sHeader, -4));
@@ -247,9 +248,21 @@ class Message760 extends Payload
                 $oSTB->iFeatureSetting   = hexdec($this->aDataComponents['feature']->iFeatSetting);
                 $oSTB->sFeatureSetting   = $this->aDataComponents['feature']->sFeatSetting;
             }
+            
+            if (isset($this->aDataComponents['auth'])) {
+                try {
+                    $bServicesOk = $this->aDataComponents['auth']->validateServices();
+                    
+                    $oSTB->aAuthRecords = $this->aDataComponents['auth']->aAuthRecords;
+                } catch (Exception $e) {                    
+                	$bFoundError = true;
+	                $this->oResponse = new Response001($this->iSequence, $e->getCode());
+                }
+            }
 
             if (!$bFoundError) {
 	            try {
+    	        	$oSTB->iInstallTimestamp = time();
     	        	$oSTB->save();
 
 	                // 0    No error.
@@ -315,6 +328,17 @@ class Message760 extends Payload
                 $oSTB->iOutputChannel    = hexdec($this->aDataComponents['feature']->iOutputChannel);
                 $oSTB->iFeatureSetting   = hexdec($this->aDataComponents['feature']->iFeatSetting);
                 $oSTB->sFeatureSetting   = $this->aDataComponents['feature']->sFeatSetting;
+            }
+            
+            if (isset($this->aDataComponents['auth'])) {
+                try {
+                    $bServicesOk = $this->aDataComponents['auth']->validateServices();
+                    
+                    $oSTB->aAuthRecords = $this->aDataComponents['auth']->aAuthRecords;
+                } catch (Exception $e) {                    
+                	$bFoundError = true;
+	                $this->oResponse = new Response001($this->iSequence, $e->getCode());
+                }
             }
             
             if (isset($this->aDataComponents['bsowner']) && !$bFoundError) {

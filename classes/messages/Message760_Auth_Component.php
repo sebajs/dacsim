@@ -22,7 +22,7 @@ class Message760_Auth_Component extends Thing
         $this->aAuthRecords      = array();
         
         for ($i=0; $i<$this->iNumRecords; $i++) {
-            $iStartPos = self::HEADER_LENGTH+($i*self::RECORD_LENGTH);            
+            $iStartPos = self::HEADER_LENGTH+($i*self::RECORD_LENGTH);
             
             $this->aAuthRecords[$i] = new stdClass();
             $this->aAuthRecords[$i]->iFlag    = substr($sData, $iStartPos, 2);
@@ -46,5 +46,20 @@ class Message760_Auth_Component extends Thing
             echo "       Handle:  ".$oRec->iHandle. " (".hexdec($oRec->iHandle).")\n";
             echo "       Program: ".$oRec->iProgram." (".hexdec($oRec->iProgram).")\n";
         }
+    }
+    
+    public function validateServices()
+    {
+        $oTempService = new Service('');
+        
+        foreach ($this->aAuthRecords AS $oRecord) {
+            if (!$oTempService->exists(hexdec($oRecord->iHandle))) {
+                // 1020 Service Handle does not exist for this Business System.
+                $iError = 1020;                
+                throw new Exception("Unknown Service Error {$iError}", $iError);
+            }
+        }
+        
+        return true;               
     }
 }

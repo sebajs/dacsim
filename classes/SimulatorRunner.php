@@ -5,39 +5,39 @@ class SimulatorRunner
     public static function run($sHost, $iPort, $bSendResponse)
     {
         if ($sHost == '' || $iPort == '') {
-            echo "Invalid IP or Port.\n";
+            Output::log("Invalid IP or Port!");
             die();
         }
 
         if (($sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP)) === false) {
-            echo "socket_create() falló: razón: " . socket_strerror(socket_last_error()) . "\n";
+            Output::log("socket_create() falló: razón: " . socket_strerror(socket_last_error()));
         }
 
         if (socket_bind($sock, $sHost, $iPort) === false) {
-            echo "socket_bind() falló: razón: " . socket_strerror(socket_last_error($sock)) . "\n";
+            Output::log("socket_bind() falló: razón: " . socket_strerror(socket_last_error($sock)));
         }
 
         if (socket_listen($sock, 5) === false) {
-            echo "socket_listen() falló: razón: " . socket_strerror(socket_last_error($sock)) . "\n";
+            Output::log("socket_listen() falló: razón: " . socket_strerror(socket_last_error($sock)));
         } 
         
         $iConnecitons = 0;
-        echo "DACSIM Listening on {$sHost}:{$iPort}\n\n";   
+        Output::log("DACSIM Listening on {$sHost}:{$iPort}");
             
         do {
             
             if (($msgsock = socket_accept($sock)) === false) {
-                echo "socket_accept() falló: razón: " . socket_strerror(socket_last_error($sock)) . "\n";
+                Output::log("socket_accept() falló: razón: " . socket_strerror(socket_last_error($sock)));
                 break;
             }
             $iConnecitons++;
-            echo "Connection #{$iConnecitons} accepted!\n\n";
+            Output::log("Connection #{$iConnecitons} accepted!");
             
             $iMessages = 0;
 
             do {
                 if (false === ($buf = socket_read($msgsock, 2048, PHP_NORMAL_READ))) {
-                    echo "socket_read() falló: razón: " . socket_strerror(socket_last_error($msgsock)) . "\n";
+                    Output::log("socket_read() falló: razón: " . socket_strerror(socket_last_error($msgsock)));
                     break 2;
                 }
                 if (!$buf = trim($buf)) {
@@ -46,16 +46,35 @@ class SimulatorRunner
                 
                 $iMessages++;
                 if ($buf == 'quit') {
-                    echo "Connection remotely closed!\n\n";
+                    Output::log();
+                    Output::log("=Connection remotely closed!");
                     break;
                 }
                 if ($buf == 'shutdown' || $buf == 'sd') {
+                    Output::log();
+                    Output::log("=Received shutdown command!");
                     socket_close($msgsock);
                     break 2;
                 }
+                if (substr($buf, 0, 2) == '--') {
+                    Output::log();
+                    Output::log("=Received management command: $buf");
+                    
+                    Result_Register::activate();
+                    $aArgs = explode(' ', $buf);
+                    Bootstrap::run($aArgs);
+                    Result_Register::deactivate();
+                    
+                    $sResponse = implode('', Result_Register::getLines());
+                    $sResponse = chr(2).$sResponse.chr(13)."\n";
+                    socket_write($msgsock, $sResponse, strlen($sResponse));   
+                    
+                    Result_Register::clean();
+                    continue;
+                }
 
-                echo "\n";
-                echo "=Received message #{$iMessages}: $buf\n";
+                Output::log();
+                Output::log("=Received message #{$iMessages}: $buf");
                 
                 // Se pasa el contenido al procesador de mensajes
                 $oMessage   = new Message($buf);
@@ -63,9 +82,10 @@ class SimulatorRunner
                 $oResponse  = $oMessage->getResponse();
                        
                 if (is_object($oResponse) && $bSendResponse) {
-                    echo "=Response to message #{$iMessages}: ";
+                    Output::log("=Response to message #{$iMessages}: ", false);                    
+                    echo $oResponse->dump();
+                    Output::log();
                     
-                    echo $oResponse->dump()."\n";
                     $oResponse->show();
                     
                     $sResponse = chr(2).$oResponse->dump().chr(13)."\n";

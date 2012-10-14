@@ -54,9 +54,9 @@ class Topology_Object extends Thing
         
         asort($aObjects);
         
-        echo "Found ".count($aObjects)." ".get_class($this).":\n";
+        Output::line("Found ".count($aObjects)." ".get_class($this).":");
         foreach ($aObjects AS $sObject) {
-            echo " - {$sObject}\n";
+            Output::line(" - {$sObject}");
         }    
     }
 }

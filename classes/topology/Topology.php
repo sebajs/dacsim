@@ -49,6 +49,21 @@ class Topology
         }
     }
     
+    public static function showSetTopBox($sSerialNumber)
+    {
+        $sSerialNumber = strtoupper($sSerialNumber);
+        
+        $oSTB = new SetTopBox($sSerialNumber);
+        if ($oSTB->exists($sSerialNumber)) {
+            
+            $oSTB->load($bOverrideBsiCode=true);
+            $oSTB->show();
+            
+        } else {
+            throw new Exception('Unknown SetTopBox: '.$sSerialNumber.'.');
+        }
+    }
+    
     public static function getObjectTypes()
     {
         $aTypes = array('bsi', 

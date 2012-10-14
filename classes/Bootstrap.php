@@ -38,7 +38,11 @@ class Bootstrap
                 case '--describe-stb':
                     $bStartSim     = false;
                     $sSerialNumber = $argv[$key + 1];
-                    Topology::showSetTopBox($sSerialNumber);
+                    try {
+                        Topology::showSetTopBox($sSerialNumber);
+                    } catch (Exception $e) {
+                        Output::line('Error: '.$e->getMessage());
+                    }
                     break;
                 case '--show-all':
                     $bStartSim = false;
@@ -50,7 +54,7 @@ class Bootstrap
                             }
                         }
                     } catch (Exception $e) {
-                        echo 'Error: ',  $e->getMessage(), "\n";
+                        Output::line('Error: '.$e->getMessage());
                     }
                     break;
                 case '--show':
@@ -59,7 +63,7 @@ class Bootstrap
                     try {
                         Topology::show($sObjectType);
                     } catch (Exception $e) {
-                        echo 'Error: ',  $e->getMessage(), "\n";
+                        Output::line('Error: '.$e->getMessage());
                     }
                     break;
                 case '--create':
@@ -68,9 +72,9 @@ class Bootstrap
                     $sObjectName = $argv[$key + 2];
                     try {
                         Topology::create($sObjectType, $sObjectName);
-                        echo $sObjectType." created successfuly\n";
+                        Output::line($sObjectType." created successfuly");
                     } catch (Exception $e) {
-                        echo 'Error: ',  $e->getMessage(), "\n";
+                        Output::line('Error: '.$e->getMessage());
                     }
                     break;
                 case '--delete':
@@ -79,9 +83,9 @@ class Bootstrap
                     $sObjectName = $argv[$key + 2];
                     try {
                         Topology::delete($sObjectType, $sObjectName);
-                        echo $sObjectType." deleted successfuly\n";
+                        Output::line($sObjectType." deleted successfuly");
                     } catch (Exception $e) {
-                        echo 'Error: ',  $e->getMessage(), "\n";
+                        Output::line('Error: '.$e->getMessage());
                     }
                     break;
                 
