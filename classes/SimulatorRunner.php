@@ -82,9 +82,8 @@ class SimulatorRunner
                 $oResponse  = $oMessage->getResponse();
                        
                 if (is_object($oResponse) && $bSendResponse) {
-                    Output::log("=Response to message #{$iMessages}: ", false);                    
-                    echo $oResponse->dump();
-                    Output::log();
+                    Output::log("=Response to message #{$iMessages}: ", false);          
+                    Output::line($oResponse->dump());
                     
                     $oResponse->show();
                     

@@ -212,20 +212,29 @@ class Message760 extends Payload
             $oSTB->iBsiCode = $this->iBsiCode;
 
             if (isset($this->aDataComponents['type'])) {
-                $oSTB->sUnitAddress = Message::hexstr($this->aDataComponents['type']->sUnitAddress);
-                $oSTB->iEqType      = hexdec($this->aDataComponents['type']->iEqType);
-                $oSTB->iEqSubType   = hexdec($this->aDataComponents['type']->iEqSubType);
+                $sMask = (decbin(hexdec($this->aDataComponents['type']->sBitMask)));
+                $sMask = strrev($sMask);
+                
+                if ($sMask[0] == '1') $oSTB->sUnitAddress = Message::hexstr($this->aDataComponents['type']->sUnitAddress);
+                if ($sMask[1] == '1') $oSTB->iEqType      = hexdec($this->aDataComponents['type']->iEqType);
+                if ($sMask[2] == '1') $oSTB->iEqSubType   = hexdec($this->aDataComponents['type']->iEqSubType);
             }
             
             if (isset($this->aDataComponents['plant'])) {
-                $oSTB->iHeadEnd    = hexdec($this->aDataComponents['plant']->iHeadEnd);
-                $oSTB->iUsPlant    = hexdec($this->aDataComponents['plant']->iUsPlant);
-                $oSTB->iDsPlant    = hexdec($this->aDataComponents['plant']->iDsPlant);
-                $oSTB->iChannelMap = hexdec($this->aDataComponents['plant']->iVcmHandle);
+                $sMask = (decbin(hexdec($this->aDataComponents['plant']->sBitMask)));
+                $sMask = strrev($sMask);
+                
+                if ($sMask[0] == '1') $oSTB->iHeadEnd    = hexdec($this->aDataComponents['plant']->iHeadEnd);
+                if ($sMask[1] == '1') $oSTB->iUsPlant    = hexdec($this->aDataComponents['plant']->iUsPlant);
+                if ($sMask[2] == '1') $oSTB->iDsPlant    = hexdec($this->aDataComponents['plant']->iDsPlant);
+                if ($sMask[5] == '1') $oSTB->iChannelMap = hexdec($this->aDataComponents['plant']->iVcmHandle);
             }
             
             if (isset($this->aDataComponents['state'])) {
-                $oSTB->iOnPlant = hexdec($this->aDataComponents['state']->iOnPlant);
+                $sMask = (decbin(hexdec($this->aDataComponents['state']->sBitMask)));
+                $sMask = strrev($sMask);
+                
+                if ($sMask[0] == '1') $oSTB->iOnPlant = hexdec($this->aDataComponents['state']->iOnPlant);
 
                 if (!$this->aDataComponents['state']->validateOperation()) {
                 	$bFoundError = true;
@@ -236,24 +245,37 @@ class Message760 extends Payload
             }
             
             if (isset($this->aDataComponents['feature'])) {
-                $oSTB->iCreditAllowed    = hexdec($this->aDataComponents['feature']->iCreditAllowed);
-                $oSTB->iPurchasesAllowed = hexdec($this->aDataComponents['feature']->iPurchAllowed);
-                $oSTB->iMaxPackCost      = hexdec($this->aDataComponents['feature']->iMaxPackCost);
-                $oSTB->iTimeZoneId       = hexdec($this->aDataComponents['feature']->iTimeZoneID);
-                $oSTB->iEpgRegion        = hexdec($this->aDataComponents['feature']->iEpgRegion);
-                $oSTB->iRegionConfig     = hexdec($this->aDataComponents['feature']->iRegionConfig);
-                $oSTB->iTurnOnVC         = hexdec($this->aDataComponents['feature']->iTurnOnVC);
-                $oSTB->iTurnOffVC        = hexdec($this->aDataComponents['feature']->iTurnOffVC);
-                $oSTB->iOutputChannel    = hexdec($this->aDataComponents['feature']->iOutputChannel);
-                $oSTB->iFeatureSetting   = hexdec($this->aDataComponents['feature']->iFeatSetting);
-                $oSTB->sFeatureSetting   = $this->aDataComponents['feature']->sFeatSetting;
+                $sMask = (decbin(hexdec($this->aDataComponents['feature']->sBitMask)));
+                $sMask = strrev($sMask);
+                
+                if ($sMask[0] == '1') $oSTB->iCreditAllowed    = hexdec($this->aDataComponents['feature']->iCreditAllowed);
+                if ($sMask[1] == '1') $oSTB->iPurchasesAllowed = hexdec($this->aDataComponents['feature']->iPurchAllowed);
+                if ($sMask[2] == '1') $oSTB->iMaxPackCost      = hexdec($this->aDataComponents['feature']->iMaxPackCost);
+                if ($sMask[3] == '1') $oSTB->iTimeZoneId       = hexdec($this->aDataComponents['feature']->iTimeZoneID);
+                if ($sMask[4] == '1') $oSTB->iEpgRegion        = hexdec($this->aDataComponents['feature']->iEpgRegion);
+                if ($sMask[5] == '1') $oSTB->iRegionConfig     = hexdec($this->aDataComponents['feature']->iRegionConfig);
+                if ($sMask[6] == '1') $oSTB->iTurnOnVC         = hexdec($this->aDataComponents['feature']->iTurnOnVC);
+                if ($sMask[7] == '1') $oSTB->iTurnOffVC        = hexdec($this->aDataComponents['feature']->iTurnOffVC);
+                if ($sMask[8] == '1') $oSTB->iOutputChannel    = hexdec($this->aDataComponents['feature']->iOutputChannel);
+                if ($sMask[9] == '1') $oSTB->iFeatureSetting   = hexdec($this->aDataComponents['feature']->iFeatSetting);
+                if ($sMask[9] == '1') $oSTB->sFeatureSetting   = $this->aDataComponents['feature']->sFeatSetting;
             }
             
             if (isset($this->aDataComponents['auth'])) {
                 try {
                     $bServicesOk = $this->aDataComponents['auth']->validateServices();
                     
-                    $oSTB->aAuthRecords = $this->aDataComponents['auth']->aAuthRecords;
+                    if (hexdec($this->aDataComponents['auth']->iClearAllServices) == 1) {
+                        $oSTB->clearServices();
+                    }
+                    
+                    foreach ($this->aDataComponents['auth']->aAuthRecords AS $oRec) {
+                        if (hexdec($oRec->iFlag) == 1) {
+                            $oSTB->addService(hexdec($oRec->iHandle));
+                        } else {
+                            $oSTB->removeService(hexdec($oRec->iHandle));
+                        }
+                    }
                 } catch (Exception $e) {                    
                 	$bFoundError = true;
 	                $this->oResponse = new Response001($this->iSequence, $e->getCode());
@@ -293,20 +315,29 @@ class Message760 extends Payload
             }
 
             if (isset($this->aDataComponents['type']) && !$bFoundError) {
-                $oSTB->sUnitAddress = Message::hexstr($this->aDataComponents['type']->sUnitAddress);
-                $oSTB->iEqType      = hexdec($this->aDataComponents['type']->iEqType);
-                $oSTB->iEqSubType   = hexdec($this->aDataComponents['type']->iEqSubType);
+                $sMask = (decbin(hexdec($this->aDataComponents['type']->sBitMask)));
+                $sMask = strrev($sMask);
+                
+                if ($sMask[0] == '1') $oSTB->sUnitAddress = Message::hexstr($this->aDataComponents['type']->sUnitAddress);
+                if ($sMask[1] == '1') $oSTB->iEqType      = hexdec($this->aDataComponents['type']->iEqType);
+                if ($sMask[2] == '1') $oSTB->iEqSubType   = hexdec($this->aDataComponents['type']->iEqSubType);
             }
             
             if (isset($this->aDataComponents['plant']) && !$bFoundError) {
-                $oSTB->iHeadEnd    = hexdec($this->aDataComponents['plant']->iHeadEnd);
-                $oSTB->iUsPlant    = hexdec($this->aDataComponents['plant']->iUsPlant);
-                $oSTB->iDsPlant    = hexdec($this->aDataComponents['plant']->iDsPlant);
-                $oSTB->iChannelMap = hexdec($this->aDataComponents['plant']->iVcmHandle);
+                $sMask = (decbin(hexdec($this->aDataComponents['plant']->sBitMask)));
+                $sMask = strrev($sMask);
+                
+                if ($sMask[0] == '1') $oSTB->iHeadEnd    = hexdec($this->aDataComponents['plant']->iHeadEnd);
+                if ($sMask[1] == '1') $oSTB->iUsPlant    = hexdec($this->aDataComponents['plant']->iUsPlant);
+                if ($sMask[2] == '1') $oSTB->iDsPlant    = hexdec($this->aDataComponents['plant']->iDsPlant);
+                if ($sMask[5] == '1') $oSTB->iChannelMap = hexdec($this->aDataComponents['plant']->iVcmHandle);
             }
             
             if (isset($this->aDataComponents['state']) && !$bFoundError) {
-               	$oSTB->iOnPlant = hexdec($this->aDataComponents['state']->iOnPlant);
+                $sMask = (decbin(hexdec($this->aDataComponents['state']->sBitMask)));
+                $sMask = strrev($sMask);
+                
+               	if ($sMask[0] == '1') $oSTB->iOnPlant = hexdec($this->aDataComponents['state']->iOnPlant);
 
                 if (!$this->aDataComponents['state']->validateOperation()) {
                 	$bFoundError = true;
@@ -317,24 +348,37 @@ class Message760 extends Payload
             }
             
             if (isset($this->aDataComponents['feature']) && !$bFoundError) {
-                $oSTB->iCreditAllowed    = hexdec($this->aDataComponents['feature']->iCreditAllowed);
-                $oSTB->iPurchasesAllowed = hexdec($this->aDataComponents['feature']->iPurchAllowed);
-                $oSTB->iMaxPackCost      = hexdec($this->aDataComponents['feature']->iMaxPackCost);
-                $oSTB->iTimeZoneId       = hexdec($this->aDataComponents['feature']->iTimeZoneID);
-                $oSTB->iEpgRegion        = hexdec($this->aDataComponents['feature']->iEpgRegion);
-                $oSTB->iRegionConfig     = hexdec($this->aDataComponents['feature']->iRegionConfig);
-                $oSTB->iTurnOnVC         = hexdec($this->aDataComponents['feature']->iTurnOnVC);
-                $oSTB->iTurnOffVC        = hexdec($this->aDataComponents['feature']->iTurnOffVC);
-                $oSTB->iOutputChannel    = hexdec($this->aDataComponents['feature']->iOutputChannel);
-                $oSTB->iFeatureSetting   = hexdec($this->aDataComponents['feature']->iFeatSetting);
-                $oSTB->sFeatureSetting   = $this->aDataComponents['feature']->sFeatSetting;
+                $sMask = (decbin(hexdec($this->aDataComponents['feature']->sBitMask)));
+                $sMask = strrev($sMask);
+                
+                if ($sMask[0] == '1') $oSTB->iCreditAllowed    = hexdec($this->aDataComponents['feature']->iCreditAllowed);
+                if ($sMask[1] == '1') $oSTB->iPurchasesAllowed = hexdec($this->aDataComponents['feature']->iPurchAllowed);
+                if ($sMask[2] == '1') $oSTB->iMaxPackCost      = hexdec($this->aDataComponents['feature']->iMaxPackCost);
+                if ($sMask[3] == '1') $oSTB->iTimeZoneId       = hexdec($this->aDataComponents['feature']->iTimeZoneID);
+                if ($sMask[4] == '1') $oSTB->iEpgRegion        = hexdec($this->aDataComponents['feature']->iEpgRegion);
+                if ($sMask[5] == '1') $oSTB->iRegionConfig     = hexdec($this->aDataComponents['feature']->iRegionConfig);
+                if ($sMask[6] == '1') $oSTB->iTurnOnVC         = hexdec($this->aDataComponents['feature']->iTurnOnVC);
+                if ($sMask[7] == '1') $oSTB->iTurnOffVC        = hexdec($this->aDataComponents['feature']->iTurnOffVC);
+                if ($sMask[8] == '1') $oSTB->iOutputChannel    = hexdec($this->aDataComponents['feature']->iOutputChannel);
+                if ($sMask[9] == '1') $oSTB->iFeatureSetting   = hexdec($this->aDataComponents['feature']->iFeatSetting);
+                if ($sMask[9] == '1') $oSTB->sFeatureSetting   = $this->aDataComponents['feature']->sFeatSetting;
             }
             
             if (isset($this->aDataComponents['auth'])) {
                 try {
                     $bServicesOk = $this->aDataComponents['auth']->validateServices();
                     
-                    $oSTB->aAuthRecords = $this->aDataComponents['auth']->aAuthRecords;
+                    if (hexdec($this->aDataComponents['auth']->iClearAllServices) == 1) {
+                        $oSTB->clearServices();
+                    }
+                    
+                    foreach ($this->aDataComponents['auth']->aAuthRecords AS $oRec) {
+                        if (hexdec($oRec->iFlag) == 1) {
+                            $oSTB->addService(hexdec($oRec->iHandle));
+                        } else {
+                            $oSTB->removeService(hexdec($oRec->iHandle));
+                        }
+                    }
                 } catch (Exception $e) {                    
                 	$bFoundError = true;
 	                $this->oResponse = new Response001($this->iSequence, $e->getCode());

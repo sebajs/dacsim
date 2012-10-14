@@ -23,7 +23,8 @@ class SetTopBox extends Topology_Object
     protected $iOutputChannel;
     protected $iFeatureSetting;
     protected $sFeatureSetting;
-    protected $aAuthRecords;
+    protected $aAuthServices;
+    protected $aAuthPrograms;
     protected $iInstallTimestamp;
 
     public function __construct($sSerialNumber)
@@ -31,6 +32,8 @@ class SetTopBox extends Topology_Object
         $this->sStoragePath  = STBS_PATH;
         $this->sName         = $sSerialNumber;
         $this->sSerialNumber = $sSerialNumber;
+        $this->aAuthServices = array();
+        $this->aAuthPrograms = array();
     }
 
     public function show()
@@ -47,14 +50,18 @@ class SetTopBox extends Topology_Object
         Output::line(" TimeZone:  {$this->iTimeZoneId} | EPGRegion: {$this->iEpgRegion} | RegionCfg: {$this->iRegionConfig}");
         Output::line(" TurnOnVC:  {$this->iTurnOnVC} | TurnOffVC: {$this->iTurnOffVC} | Output CH: {$this->iOutputChannel}");
         Output::line(" FeatSets:  {$this->iFeatureSetting} ({$this->sFeatureSetting})");
-        
-        $oHelper = new Message760_Feature_Component('');
-        $aReversedSettings = strrev($this->sFeatureSetting);
-        for ($i=0; $i<strlen($this->sFeatureSetting); $i++) {
-            if ($aReversedSettings[$i] == '1') {
-                Output::line("     + ".$oHelper->getSettingName($i));
+        if (false) {
+            $oHelper = new Message760_Feature_Component('');
+            $aReversedSettings = strrev($this->sFeatureSetting);
+            for ($i=0; $i<strlen($this->sFeatureSetting); $i++) {
+                if ($aReversedSettings[$i] == '1') {
+                    Output::line("     + ".$oHelper->getSettingName($i));
+                }
             }
         }
+        
+        Output::line(" Services:  ".implode(', ', $this->aAuthServices));
+        Output::line(" Programs:  ".implode(', ', $this->aAuthPrograms));
         Output::line();
     }
 
@@ -99,7 +106,8 @@ class SetTopBox extends Topology_Object
                 $this->iOutputChannel    = $oStoredStb->iOutputChannel;
                 $this->iFeatureSetting   = $oStoredStb->iFeatureSetting;
                 $this->sFeatureSetting   = $oStoredStb->sFeatureSetting;
-                $this->aAuthRecords      = $oStoredStb->aAuthRecords;
+                $this->aAuthServices     = $oStoredStb->aAuthServices;
+                $this->aAuthPrograms     = $oStoredStb->aAuthPrograms;
                 $this->iInstallTimestamp = $oStoredStb->iInstallTimestamp;
                 
             } else {
@@ -229,5 +237,22 @@ class SetTopBox extends Topology_Object
         }
 
         return $iError;
+    }
+    
+    public function clearServices()
+    {
+        $this->aAuthServices = array();
+    }
+    
+    public function addService($iService)
+    {
+        $this->aAuthServices[$iService] = $iService;
+        asort($this->aAuthServices);
+    }
+    
+    public function removeService($iService)
+    {
+        unset($this->aAuthServices[$iService]);
+        asort($this->aAuthServices);
     }
 }
