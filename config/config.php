@@ -10,6 +10,7 @@ define('CHANNELMAP_PATH',   'channelmap/');
 define('SERVICE_PATH',      'service/');
 define('BSI_PATH',          'bsi/');
 define('REGIONCONFIG_PATH', 'regionconfig/');
+define('APP_TZ',            'UTC');
 
 define('DATA_EXTENSION',  '.dat');
 

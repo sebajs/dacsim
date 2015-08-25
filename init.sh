@@ -1,6 +1,6 @@
 SOCK=`php -m | grep sockets`
 
-if [ $SOCK = "" ]; then
+if [ $SOCK"x" = "x" ]; then
 	docker-php-ext-install sockets
 fi
 

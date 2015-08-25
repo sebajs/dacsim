@@ -3,6 +3,8 @@
 
 require_once('config/config.php');
 
+date_default_timezone_set(APP_TZ);
+
 error_reporting(E_ALL);
 
 /* Permitir al script esperar para conexiones. */

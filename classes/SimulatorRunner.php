@@ -38,7 +38,7 @@ class SimulatorRunner
             do {
                 if (false === ($buf = socket_read($msgsock, 2048, PHP_NORMAL_READ))) {
                     Output::log("socket_read() falló: razón: " . socket_strerror(socket_last_error($msgsock)));
-                    break 2;
+                    break;
                 }
                 if (!$buf = trim($buf)) {
                     continue;
