@@ -227,7 +227,7 @@ class SetTopBox extends Topology_Object
         }
 
         // RegionConfig
-        if ($iError == 0) {
+        if ($iError == 0) {			
             $oTemp = new RegionConfig($this->iRegionConfig);
             if (!$oTemp->exists()) {
                 // 1017 Region Config Handle in the Feature Component does not exist.
