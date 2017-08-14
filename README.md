@@ -1,14 +1,14 @@
 COMMANDS HELP
 -------------
 
-###Start simulator:
+### Start simulator:
 ```
 $ php dacsim.php -h 0.0.0.0 -p 5001
 Aug 14 18:33:51 :: DACSIM Listening on 0.0.0.0:5001
 ```
 
 
-###Connect to the simulator:
+### Connect to the simulator:
 ```
 $ telnet 127.0.0.1 5001
 Trying 127.0.0.1...
@@ -22,7 +22,7 @@ Aug 14 18:34:25 :: Connection #1 accepted!
 ```
 
 
-###Send commands to the simulator:
+### Send commands to the simulator:
 
 In the telnet prompt enter the command in HEX and press ENTER:
 ```
@@ -64,7 +64,7 @@ Status:    1 (1)
 --------------------------------------------------------------------------------
 ```
 
-###Parse a HEX command without executing it
+### Parse a HEX command without executing it
 ```
 $ php dacsim.php --stream 00B2.004C.02F8.0002...01.4D3131323330544537383434..01.00000007.30303030303338343235313037313639.238E.0000..02.00000027.00000001.0000019B.00000004.00000000.00000000.00000001..03.00000003.01.06..04.000003FF.000003E8.00000003.01F4.001E.0001.0001.0001.0001.03.0012FFFC..07.01.01.00.0006.01.FF.000080C2.00000000.01.FF.0001D8A8.00000000.01.FF.0009DD8B.00000000.01.FF.00125020.00000000.01.FF.000080C3.00000000.01.FF.0001D4C0.00000000...DA
 
@@ -163,14 +163,14 @@ CompType: 07
 --------------------------------------------------------------------------------
 ```
 
-###Get list of existing STBs
+### Get list of existing STBs
 ```
 $ php dacsim.php --show stb
 Found 1 SetTopBox:
  - M11230TE7844
 ```
 
-###Get data of a specific STB
+### Get data of a specific STB
 ```
 $ php dacsim.php --describe-stb M11230TE7844
 STB Description
@@ -189,7 +189,7 @@ STB Description
  Programs:
 ```
 
-###Get current topology:
+### Get current topology:
 ```
 $ php dacsim.php --show-all
 Found 2 BSI:
@@ -216,7 +216,7 @@ Found 1 RegionConfig:
 - 1
 ```
 
-###Get topology items of a specific type:
+### Get topology items of a specific type:
 ```
 $ php dacsim.php --show headend
 Found 1 HeadEnd:
@@ -224,7 +224,7 @@ Found 1 HeadEnd:
 ```
 Available types: bsi, stb, equiptype, headend, usplant, dsplant, channelmap, service, regionconf
 
-###Create a topology item
+### Create a topology item
 ```
 $ php dacsim.php --create bsi 3
 bsi created successfuly
@@ -237,7 +237,7 @@ Found 3 BSI:
 ```
 Available types: bsi, stb, equiptype, headend, usplant, dsplant, channelmap, service, regionconf
 
-###Delete a topology item
+### Delete a topology item
 ```
 $ php dacsim.php --delete bsi 3
 bsi deleted successfuly
@@ -248,7 +248,7 @@ Found 2 BSI:
 ```
 Available types: bsi, stb, equiptype, headend, usplant, dsplant, channelmap, service, regionconf
 
-###Generate a checksum for the payload of a command
+### Generate a checksum for the payload of a command
 ````
 $ php dacsim.php --checksum 004C.02F8.0002...03.4D3131323330544537383434
 DACSIM Checksum Generator
@@ -259,7 +259,9 @@ DACSIM Checksum Generator
 ````
 
 The supplied HEX command MUST not include the length (first 4 nibbles) and the checksum (last 2 nibbles).
+```
 See that the supplied command is: ----004C02F80002034D3131323330544537383434--
 And the response is:              0015004C02F80002034D3131323330544537383434EC
+```
 
 The simulator won't accept the first one, only the one with the lenght and the valir checksum.
