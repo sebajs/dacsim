@@ -124,7 +124,7 @@ class SetTopBox extends Topology_Object
         unlink($sFileName);
     }
 
-    public function exists($sName, $sObjectPath='')
+    public function exists($sName='', $sObjectPath='')
     {
         if ($sObjectPath == '') {
             $sFileName = DATA_PATH.$this->sStoragePath.($this->sName).DATA_EXTENSION;
@@ -171,7 +171,7 @@ class SetTopBox extends Topology_Object
         }
 
         // EquipType and EquipSubType
-        if ($iError == 0) {
+        if ($iError == 0 && $this->iEqType !== null) {
             $oTemp = new EquipType($this->iEqType);
             if (!$oTemp->exists()) {
                 // 1009 Invalid Equipment type.
@@ -187,7 +187,7 @@ class SetTopBox extends Topology_Object
         }
 
         // HeadEnd
-        if ($iError == 0) {
+        if ($iError == 0 && $this->iHeadEnd !== null) {
             $oTemp = new HeadEnd($this->iHeadEnd);
             if (!$oTemp->exists()) {
                 // 1011 Headend handle does not exist.
@@ -197,7 +197,7 @@ class SetTopBox extends Topology_Object
         }
 
         // USPlant
-        if ($iError == 0) {
+        if ($iError == 0 && $this->iUsPlant !== null) {
             $oTemp = new USPlant($this->iUsPlant);
             if (!$oTemp->exists()) {
                 // 1012 Upstream Plant Handle does not exist.
@@ -207,7 +207,7 @@ class SetTopBox extends Topology_Object
         }
 
         // DSPlant
-        if ($iError == 0) {
+        if ($iError == 0 && $this->iDsPlant !== null) {
             $oTemp = new DSPlant($this->iDsPlant);
             if (!$oTemp->exists()) {
                 // 1013 Downstream Plant Handle does not exist.
@@ -217,7 +217,7 @@ class SetTopBox extends Topology_Object
         }
 
         // ChannelMap
-        if ($iError == 0) {
+        if ($iError == 0 && $this->iChannelMap !== null) {
             $oTemp = new ChannelMap($this->iChannelMap);
             if (!$oTemp->exists()) {
                 // 1014 VCM Handle does not exist.
@@ -227,7 +227,7 @@ class SetTopBox extends Topology_Object
         }
 
         // RegionConfig
-        if ($iError == 0) {
+        if ($iError == 0 && $this->iRegionConfig !== null) {
             $oTemp = new RegionConfig($this->iRegionConfig);
             if (!$oTemp->exists()) {
                 // 1017 Region Config Handle in the Feature Component does not exist.
