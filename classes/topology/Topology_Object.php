@@ -33,6 +33,7 @@ class Topology_Object extends Thing
         } else {
             $sFileName = DATA_PATH.$sObjectPath.$sName.DATA_EXTENSION;
         }
+        
         return file_exists($sFileName);
     }
     

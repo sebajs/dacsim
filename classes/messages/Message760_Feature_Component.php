@@ -38,18 +38,21 @@ class Message760_Feature_Component extends Thing
     
     public function show()
     {
+		$sMask = (decbin(hexdec($this->sBitMask)));
+		$sMask = strrev($sMask);		
+		
         echo " Feature Component (".$this->iSubtype."):\n";
         echo "   BitMask:   ".$this->sBitMask.       " (".$this->sBitMask.")\n";
-        echo "   Credit:    ".$this->iCreditAllowed. " (".hexdec($this->iCreditAllowed).")\n";
-        echo "   Purchases: ".$this->iPurchAllowed.  " (".hexdec($this->iPurchAllowed).")\n";
-        echo "   MaxCost:   ".$this->iMaxPackCost.   " (".hexdec($this->iMaxPackCost).")\n";
-        echo "   TimeZone:  ".$this->iTimeZoneID.    " (".hexdec($this->iTimeZoneID).")\n";
-        echo "   EPGRegion: ".$this->iEpgRegion.     " (".hexdec($this->iEpgRegion).")\n";
-        echo "   RegionCfg: ".$this->iRegionConfig.  " (".hexdec($this->iRegionConfig).")\n";
-        echo "   TurnOffVC: ".$this->iTurnOffVC.     " (".hexdec($this->iTurnOffVC).")\n";
-        echo "   TurnOnVC:  ".$this->iTurnOnVC.      " (".hexdec($this->iTurnOnVC).")\n";
-        echo "   Output CH: ".$this->iOutputChannel. " (".hexdec($this->iOutputChannel).")\n";
-        echo "   FeatSets:  ".$this->iFeatSetting.   " (".$this->sFeatSetting.")\n";     
+        echo "   Credit:    [In bitmask: ".$sMask[0]."] ".$this->iCreditAllowed. " (".hexdec($this->iCreditAllowed).")\n";
+        echo "   Purchases: [In bitmask: ".$sMask[1]."] ".$this->iPurchAllowed.  " (".hexdec($this->iPurchAllowed).")\n";
+        echo "   MaxCost:   [In bitmask: ".$sMask[2]."] ".$this->iMaxPackCost.   " (".hexdec($this->iMaxPackCost).")\n";
+        echo "   TimeZone:  [In bitmask: ".$sMask[3]."] ".$this->iTimeZoneID.    " (".hexdec($this->iTimeZoneID).")\n";
+        echo "   EPGRegion: [In bitmask: ".$sMask[4]."] ".$this->iEpgRegion.     " (".hexdec($this->iEpgRegion).")\n";
+        echo "   RegionCfg: [In bitmask: ".$sMask[5]."] ".$this->iRegionConfig.  " (".hexdec($this->iRegionConfig).")\n";
+        echo "   TurnOffVC: [In bitmask: ".$sMask[6]."] ".$this->iTurnOffVC.     " (".hexdec($this->iTurnOffVC).")\n";
+        echo "   TurnOnVC:  [In bitmask: ".$sMask[7]."] ".$this->iTurnOnVC.      " (".hexdec($this->iTurnOnVC).")\n";
+        echo "   Output CH: [In bitmask: ".$sMask[8]."] ".$this->iOutputChannel. " (".hexdec($this->iOutputChannel).")\n";
+        echo "   FeatSets:  [In bitmask: ".$sMask[9]."] ".$this->iFeatSetting.   " (".$this->sFeatSetting.")\n";
         
         $aReversedSettings = strrev($this->sFeatSetting);
         for ($i=0; $i<strlen($this->sFeatSetting); $i++) {
